@@ -218,3 +218,59 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ============================================================
+# DATA FOLDERS: keep the folder structure, never the contents.
+# All datasets are rebuilt from their original sources by the
+# pipeline scripts, so nothing in data/ needs version control.
+# ============================================================
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/private/*
+!data/private/.gitkeep
+
+# ============================================================
+# SAFETY NET: data files anywhere in the repo.
+# Catches a script or notebook that accidentally writes data
+# outside data/. 
+# ============================================================
+# Shapefile and its sidecar files
+*.shp
+*.shx
+*.dbf
+*.prj
+*.cpg
+*.sbn
+*.sbx
+# Other vector formats
+*.gpkg
+*.geojson
+*.kml
+*.kmz
+# Esri file geodatabases
+*.gdb/
+# Tabular and columnar data
+*.csv
+*.xlsx
+*.parquet
+# Rasters
+*.tif
+*.tiff
+# Downloaded archives
+*.zip
+
+# ============================================================
+# SECRETS: database passwords, Esri API keys, etc.
+# Commit a .env.example with blank values to document
+# which variables are needed.
+# ============================================================
+.env
+.env.*
+!.env.example
+
+# ============================================================
+# OPERATING SYSTEM
+# ============================================================
+.DS_Store
