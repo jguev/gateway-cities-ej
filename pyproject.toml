@@ -22,3 +22,9 @@ dev = [
     "pytest>=8.4.2",
     "ruff>=0.16.10",
 ]
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["download"]

@@ -5,20 +5,24 @@ Source: U.S. Census TIGER/Line 2025, Places, California (tl_2025_06_place.zip)
 Run:    uv run python pipeline/load_hp_boundary.py
 """
 
-from pathlib import Path
-
 import geopandas as gpd
 from sqlalchemy import create_engine, text
 
-RAW_FILE = Path("data/raw/tl_2025_06_place.zip")
+from download import latest_path
+
+SOURCE = "tiger_places"
+FILENAME = "tl_2025_06_place.zip"
 HP_GEOID = "0636056"  # state 06 (California) + place 36056 (Huntington Park)
 TARGET_EPSG = 3310  # California Albers, meters: the project standard
 TABLE = "city_boundary"
 DB_URL = "postgresql+psycopg://jo@localhost:5432/gateway_cities"
 
+
 def main() -> None:
     # 1. Read the raw file exactly as Census published it
-    places = gpd.read_file(RAW_FILE)
+    raw_file = latest_path(SOURCE, FILENAME)
+    print(f"Reading {raw_file.name} from {raw_file.parent.name}")
+    places = gpd.read_file(raw_file)
 
     # 2. Filter by permanent ID, and fail loudly if the result is unexpected
     hp = places[places["GEOID"] == HP_GEOID]
@@ -46,6 +50,7 @@ def main() -> None:
     print(f"Loaded {len(hp)} row into '{TABLE}' (EPSG:{TARGET_EPSG})")
     print(f"Census area:   {census_km2:.3f} km²")
     print(f"PostGIS area:  {db_km2:.3f} km²")
+
 
 if __name__ == "__main__":
     main()
