@@ -1,0 +1,24 @@
+[project]
+name = "gateway-cities-ej"
+version = "0.1.0"
+requires-python = ">=3.9"
+dependencies = [
+    "geoalchemy2>=0.17.1",
+    "geopandas>=1.0.1",
+    "psycopg[binary]>=3.2.13",
+    "pyogrio>=0.11.1",
+    "pyproj>=3.6.1",
+    "python-dotenv>=1.2.1",
+    "requests>=2.32.5",
+    "shapely>=2.0.7",
+    "sqlalchemy>=2.0.54",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.31.0",
+    "jupyter>=1.1.1",
+    "nbstripout>=0.8.2",
+    "pytest>=8.4.2",
+    "ruff>=0.16.10",
+]
