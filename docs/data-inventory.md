@@ -83,13 +83,58 @@ vintage is acquired.
 | `traffic`, `Diesel_PM`, `Haz_Waste`, `cleanups` | Indicators most relevant to the I-710 corridor and Exide |
 | `*_Pctl` | Statewide percentile (0–100) for each indicator |
 
-### Verified against the data (2026-10-07)
+### Files acquired (see `data/manifest.jsonl`)
 
-- 9,106 tracts, all MultiPolygon, CRS EPSG:3310.
-- Tract IDs are unique.
-- NULL counts match the data dictionary's "# of NAs" table exactly.
+| File | SHA-256 (prefix) | Raw folder (UTC) |
+|---|---|---|
+| `calenviroscreen50results_f_070126.gdb.zip` | `5bcb8afe5b01f477` | `2026-10-08` |
+| `final-calenviroscreen-5.0-data-dictionary.pdf` | `1c730d0a9a7e7271` | `2026-10-08` |
+
+### Verified against the data (2026-10-07, #4)
+
+- 9,106 tracts, all MultiPolygon, CRS EPSG:3310. Tract IDs are unique.
 - No negative or sentinel values; missing data is stored as real NULLs.
-- 14 tracts lie within Huntington Park; all rank between the 89th and 99th percentile overall.
+- NULL counts match the data dictionary's "# of NAs" table:
+
+| Indicator | Column | Dictionary | Data |
+|---|---|---|---|
+| Child's Lead | `lead` | 84 | 84 |
+| Diesel PM | `Diesel_PM` | 9 | 9 |
+| Drinking Water | `Drinking_Water` | 9 | 9 |
+| Traffic | `traffic` | 9 | 9 |
+| Asthma | `asthma` | 33 | 33 |
+| Cardiovascular Disease | `Cardiovascular` | 26 | 26 |
+| Diabetes | `diabetes` | 36 | 36 |
+| Low-Birth-Weight | `Low_Birth_Weight` | 234 | 234 |
+| Education | `Education` | 28 | 28 |
+| Housing Burden | `HousBurd` | 64 | 64 |
+| Linguistic Isolation | `Linguistic_Isol` | 58 | 58 |
+| Poverty | `Poverty` | 50 | 50 |
+| Unemployment | `Unemployment` | 45 | 45 |
+
+  All other indicators: 0 NULLs in both. Not covered by the dictionary
+  table: overall score (`CIscore`, 73 NULLs), population characteristics
+  (`PopChar`, 73), and demographic columns (25 each).
+
+### Huntington Park overlap (2026-10-07, #4)
+
+- **Method:** spatial join with `intersects`, then each tract's share of
+  area inside the city = area of (tract ∩ city) / tract area, in EPSG:3310.
+- **Rule:** a tract is "in" the city if ≥ 50% of its area is inside.
+- **Result:** 33 tracts intersect; 14 are inside (shares 99.7–100%);
+  19 only touch the border (share 0.0%: the overlap is a line, not an area).
+  Because shares are either ~100% or 0%, any threshold from 1% to 99%
+  gives the same 14 tracts.
+- All 14 tracts rank in the 89th–99th percentile overall.
+- None of the 33 intersecting tracts is unscored.
+
+### Open questions
+
+- **Tract count:** CES has 9,106 tracts. California's full 2020 tract
+  count appears to be somewhat higher. To verify by comparing against TIGER
+  2020 tracts (likely water-only or unpopulated tracts excluded).
+- **Server date:** files report Last-Modified 2026-10-01, after the
+  2026-07-01 release. Unknown whether contents changed.
 
 ### Limitations
 
@@ -99,4 +144,3 @@ vintage is acquired.
 - **Zero is not missing.** Zeros are real measurements; NAs are unknown. Never fill NAs with 0.
 - **73 tracts have no overall score.** Population in these tracts ranges from 0 to 13,681 (median 38). Most have too few residents to score, but the largest is the UCLA dormitory tract. Students in dorms live in "group quarters," which the Census Bureau excludes from poverty statistics, so CalEnviroScreen can't compute the population side of the score. Missing scores therefore follow a pattern (few residents, or residents in group quarters) rather than being random.
 - **Folder dates are UTC.** The raw folder is dated 2026-10-08 because the download happened after 5 pm Pacific.
-- **Open question:** the server reports the files were modified 2026-10-01, after the July release. Unknown whether contents changed.
