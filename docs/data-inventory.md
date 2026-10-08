@@ -55,3 +55,48 @@ vintage is acquired.
   single table.
 - **NAD83 vs WGS 84** differ by about 1–2 m in California. Always
   transform explicitly; never relabel one as the other.
+
+  ---
+
+## CalEnviroScreen 5.0 (OEHHA)
+
+| Item | Detail |
+|---|---|
+| Publisher | California Office of Environmental Health Hazard Assessment (OEHHA) |
+| What it is | Cumulative pollution burden and population vulnerability scores |
+| Geography | One row per 2020 census tract (9,106 tracts) |
+| Version used | Final 5.0, released 2026-07-01 |
+| Update schedule | Irregular (major versions every few years) |
+| Original CRS | EPSG:3310 (already the project standard) |
+| Format | File geodatabase, layer `CES5_final_results` |
+| Acquire script | `pipeline/acquire_calenviroscreen.py` |
+| Documentation | Data dictionary (acquired alongside the data), [technical report](https://oehha.ca.gov/calenviroscreen/report/calenviroscreen-50) |
+| Terms | No restrictions on public use |
+
+### Key fields
+
+| Field | Meaning |
+|---|---|
+| `tract` | Census tract ID. **Stored as an integer (10 digits); must be converted to 11-character text with a leading zero** to match other Census data. |
+| `CIscore` / `CIscoreP` | Overall CalEnviroScreen score and its statewide percentile |
+| `lead` / `Lead_Pctl` | Children's lead risk from housing ("Child's Lead" in the dictionary) |
+| `traffic`, `Diesel_PM`, `Haz_Waste`, `cleanups` | Indicators most relevant to the I-710 corridor and Exide |
+| `*_Pctl` | Statewide percentile (0–100) for each indicator |
+
+### Verified against the data (2026-10-07)
+
+- 9,106 tracts, all MultiPolygon, CRS EPSG:3310.
+- Tract IDs are unique.
+- NULL counts match the data dictionary's "# of NAs" table exactly.
+- No negative or sentinel values; missing data is stored as real NULLs.
+- 14 tracts lie within Huntington Park; all rank between the 89th and 99th percentile overall.
+
+### Limitations
+
+- **Screening tool, not a risk assessment.** Percentiles are relative rankings, not health thresholds.
+- **Tract-level only.** It can't describe individual homes.
+- **2020 tracts.** Not directly comparable to CalEnviroScreen 4.0, which used 2010 tracts.
+- **Zero is not missing.** Zeros are real measurements; NAs are unknown. Never fill NAs with 0.
+- **73 tracts have no overall score.** Population in these tracts ranges from 0 to 13,681 (median 38). Most have too few residents to score, but the largest is the UCLA dormitory tract. Students in dorms live in "group quarters," which the Census Bureau excludes from poverty statistics, so CalEnviroScreen can't compute the population side of the score. Missing scores therefore follow a pattern (few residents, or residents in group quarters) rather than being random.
+- **Folder dates are UTC.** The raw folder is dated 2026-10-08 because the download happened after 5 pm Pacific.
+- **Open question:** the server reports the files were modified 2026-10-01, after the July release. Unknown whether contents changed.
