@@ -35,3 +35,13 @@
 - Added ruff config; fixed import grouping and line length.
 - Started `docs/data-inventory.md` with TIGER Places, checked against the data: 483 cities, 1,136 CDPs, 136 MultiPolygons.
 - Filtering to cities would drop several census-designated places (CDPs), which are historically some of the most burdened communities with least political power. 
+
+### 2026-10-07: Session 3: CalEnviroScreen 5.0
+
+- Chose the file geodatabase over shapefile/CSV: full field names, real types, real NULLs, geometry.
+- Acquired the results and data dictionary through the download helper (both in the manifest).
+- Checked the data against the dictionary: NULL counts match exactly; no sentinel values.
+- Found that tract IDs are stored as integers and need zero-padding to 11 characters.
+- First spatial join: 14 tracts lie in Huntington Park, all in the 89th–99th percentile.
+- A spatial join matches rows when shapes intersect, and "intersects" includes tracts that only share a border with Huntington Park. Those border tracts are more neighbors than actual parts of the city, so I measured each tract's overlap area to keep only the ones truly inside.
+- The largest unscored tract (13,681 people) turned out to be the UCLA dorms. Students in dorms live in "group quarters," which are left out of poverty statistics, so missing data can follow a pattern instead of being random.
