@@ -36,10 +36,18 @@
 - **2026-10-07:** CalEnviroScreen acquired as a file geodatabase rather than shapefile or CSV, to keep full field names, column types, and real NULLs (#4).
 - **2026-10-07:** A tract counts as inside a boundary if ≥ 50% of its area lies inside (#4).
 - **2026-10-08:** Census IDs are always stored as text; integer IDs from sources are zero-padded on load.
+- **2026-10-15:** Two study areas, one per research question:
+  - **Exide core** ("Where did the lead go?"): DTSC's seven affected communities: Bell, Boyle Heights, Commerce, East Los Angeles, Huntington Park, Maywood, Vernon. Boyle Heights (City of Los Angeles neighborhood) and East Los Angeles (unincorporated CDP) are not TIGER incorporated places; their boundary sources are to be determined.
+  - **Gateway Cities region** ("What else do these neighborhoods carry?"): the 27 member cities of the Gateway Cities Council of Governments, plus unincorporated areas within them.
 
 ## Open Decisions
 
-- **Study area definition.** The Gateway Cities are a political grouping of cities, but the Exide sampling zone is defined by distance and includes Boyle Heights (part of the City of Los Angeles) and East Los Angeles (an unincorporated CDP). A list of cities can't define the study area cleanly. Decide before designing the database.
+- **Boyle Heights boundary source.** Not a TIGER place; candidates include City of Los Angeles neighborhood boundaries or a census-tract definition. Decide before loading the Exide core study area.
+- **Confirm Gateway Cities membership.** The 27-city list comes from a secondary source (Institute for Local Government); verify against the Council of Governments' own site before loading the region.
+
+## Research Questions
+
+- **Sensitive-site decisions.** For every school, park, and daycare in or near the PIA: where were samples taken, what threshold and exposure assumptions were applied, and were high-contact areas (athletic fields, play areas, bare soil) sampled? Motivated by Huntington Park High School (PSCH-05), where the athletic fields were not sampled. Planned after the parcel data is acquired. Site-level results may be published (public institutions, not residences).
 
 ## Sessions
 
@@ -75,3 +83,12 @@
 - Log: recorded GDAL, PROJ, PostgreSQL, and PostGIS versions; dated all decisions; added Open Decisions.
 - Committed exploration scripts in `notebooks/`; rerunning them reproduced every documented number.
 - **Reflection:** My exploration of the data used to live only in my terminal history. Findings I can rerun let me check whether they still hold when the data changes.
+
+### 2026-10-15: Session 5: Exide Context, Study Areas, and Background
+
+- Decided on two study areas (Exide core; Gateway Cities region); resolved the open study-area decision and recorded two follow-up questions.
+- Fact-checked the Exide history against primary sources; four earlier claims corrected (PIA shape, sampling vs. cleanup counts, 2018 date on 8,500 parcels, unverified sampling protocol).
+- Created `docs/background.md` with status (Verified / Reported / Claim / Open) and "as of" dates for each fact.
+- Investigated Huntington Park High School (PSCH-05): sampled, judged no cleanup needed; athletic fields not sampled. Removal Action Workplan (2017) link is dead.
+- Added a research question on sensitive-site decisions across the PIA.
+- **Reflection:** DTSC compared Huntington Park High School's results (100–110 ppm) to its 80 ppm residential screening level, which models children aged 0–7 exposed at home 350 days a year. Adjusted to a five-day school week, the equivalent level rises to 110 ppm, the top of the school's results, and DTSC added that older students are less susceptible to lead and contact school soil less often. The "no cleanup" decision therefore rests on exposure assumptions and on where samples were taken; the athletic fields, where soil contact is likely highest, were not sampled.
