@@ -39,6 +39,9 @@
 - **2026-10-15:** Two study areas, one per research question:
   - **Exide core** ("Where did the lead go?"): DTSC's seven affected communities: Bell, Boyle Heights, Commerce, East Los Angeles, Huntington Park, Maywood, Vernon. Boyle Heights (City of Los Angeles neighborhood) and East Los Angeles (unincorporated CDP) are not TIGER incorporated places; their boundary sources are to be determined.
   - **Gateway Cities region** ("What else do these neighborhoods carry?"): the 27 member cities of the Gateway Cities Council of Governments, plus unincorporated areas within them.
+- **2026-10-15:** The database is organized in layers: `raw` (as loaded), `staging` (cleaned), `analytics` (joined and derived), and `public` (aggregated, small-cell-suppressed views only). A dedicated read-only role can access only `public`, so privacy is enforced by the database, not by convention.
+- **2026-10-15:** ArcGIS feature services are extracted with explicit paging, retries, and record-count checks against the service's reported total.
+- **2026-10-15:** No heavyweight orchestration tool (Airflow, Dagster, etc.). The pipeline runs as a simple ordered command; revisit only if the number of sources or schedules grows substantially.
 
 ## Open Decisions
 
@@ -48,6 +51,21 @@
 ## Research Questions
 
 - **Sensitive-site decisions.** For every school, park, and daycare in or near the PIA: where were samples taken, what threshold and exposure assumptions were applied, and were high-contact areas (athletic fields, play areas, bare soil) sampled? Motivated by Huntington Park High School (PSCH-05), where the athletic fields were not sampled. Planned after the parcel data is acquired. Site-level results may be published (public institutions, not residences).
+
+## Planned Work
+
+**Analysis**
+- **Wind-direction test:** compare soil lead downwind vs. upwind of the plant at equal distances, using historical records from a nearby weather station.
+- **Boundary-edge test:** using the off-site wind-transect samples, check whether lead fades smoothly across the PIA boundary or drops at it.
+- **Sampling-access bias:** compare "Access Not Provided" rates by tract against renter share and demographics (ACS).
+- **Spatial regression and GWR:** account for spatial autocorrelation; test whether the effect of house age varies across neighborhoods.
+
+**Data**
+- **Historical traffic volumes (Caltrans):** use Caltrans traffic volumes instead of distance to freeway.
+
+**Engineering**
+- **Row-level lineage:** each loaded row records the SHA-256 of its source file.
+- **Synthetic soil dataset, tests, and CI:** realistic fake data so tests and demos run without private data; GitHub Actions runs ruff and pytest on every pull request.
 
 ## Sessions
 
