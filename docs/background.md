@@ -30,8 +30,7 @@ Fact-checked context for this project. Every fact has a source and the date it w
 | About 8,500 parcels had been sampled. | Verified | 2018-06 | [Assembly hearing](https://abgt.assembly.ca.gov/sites/abgt.assembly.ca.gov/files/August%209%20Exide%20Oversight%20Hearing.pdf) |
 | DTSC lists seven affected communities: Bell, Boyle Heights, Commerce, East Los Angeles, Huntington Park, Maywood, Vernon. | Reported | 2017-08 | [LA Times](https://www.pressreader.com/usa/los-angeles-times/20170806/281801399051660) |
 | Off-site non-residential sampling (medians, tree wells) ran radially to 7,500 ft, then along dominant wind transects to about 4.5 miles; about 20,000 data points. | Verified | Undated | [DTSC map via Assembly](https://aesm.assembly.ca.gov/sites/aesm.assembly.ca.gov/files/Off%20Site%20Non%20Residential%20Map.pdf) |
-| Residential sampling protocol (number of locations per yard, depths, lab vs. field instrument). | Open | | To read in DTSC's 2016 Sampling and Analysis Plan |
-
+| Each property was sampled at several locations (front, back, and side yards, plus drip zones under eaves), typically 10–15 samples, each analyzed individually; the representative value is the 95% UCL computed with EPA ProUCL. | Verified | 2026-10 | DTSC Exide Cleanup map app, "About" panels |
 ## Thresholds and cleanup
 
 | Fact | Status | As of | Source |

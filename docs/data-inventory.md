@@ -144,3 +144,26 @@ vintage is acquired.
 - **Zero is not missing.** Zeros are real measurements; NAs are unknown. Never fill NAs with 0.
 - **73 tracts have no overall score.** Population in these tracts ranges from 0 to 13,681 (median 38). Most have too few residents to score, but the largest is the UCLA dormitory tract. Students in dorms live in "group quarters," which the Census Bureau excludes from poverty statistics, so CalEnviroScreen can't compute the population side of the score. Missing scores therefore follow a pattern (few residents, or residents in group quarters) rather than being random.
 - **Folder dates are UTC.** The raw folder is dated 2026-10-08 because the download happened after 5 pm Pacific.
+
+---
+
+## DTSC Exide Cleanup Layers (ArcGIS feature services)
+
+| Item | Detail |
+|---|---|
+| Publisher | California Department of Toxic Substances Control (DTSC) |
+| Layers | Parcel status (10,642 parcels, **private**), PIA boundary (1), Exide facility (1) |
+| Service | `services3.arcgis.com/Oy2JTCD10wkoelxS/.../DTSCCleanupMay26/FeatureServer/2` (parcels); `.../DTSCCleanupMay24English/FeatureServer/2` and `/3` |
+| Traced from | App `d8a6b586...` → web map `c7cfedca...` → operational layers |
+| Native CRS | EPSG:2229 (State Plane Zone 5, US ft); downloaded as EPSG:4326 (server-side conversion; ~1–2 m datum tolerance) |
+| Update schedule | Live layer; data last edited 2026-10-12 at time of download |
+| Acquire script | `pipeline/acquire_dtsc_exide.py` |
+
+**Key field:** `RepresentativeSoilLeadConcent`, one value per property in ppm: the 95% UCL of 10–15 individually analyzed yard samples (EPA ProUCL), per DTSC's map app. A conservative upper estimate, not an average.
+
+**Privacy:** `APN`, `Address`, and `FileURL*` identify individual homes. The parcel layer is stored only in `data/private/` and is never published at parcel level.
+
+**Limitations**
+- Use the numeric lead field, not `Symbology` labels; label text has changed over time (80–119 vs. 80–154 ppm).
+- Prioritization text cites 300 ppm in one place and 400 ppm elsewhere; unresolved.
+- Only properties with access agreements were sampled ("Access Not Provided" parcels have no result).
