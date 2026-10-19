@@ -37,24 +37,32 @@ CREATE INDEX ON analytics.exide_hex USING gist (geom);
 
 -- Published: hexagons with fewer than 10 parcels are dropped entirely;
 -- lead statistics are hidden unless at least 10 parcels were sampled.
+-- Geometry is clipped to the PIA boundary for display; all parcels lie
+-- inside the boundary, so clipping hides no data (checked 2026-10-19).
 CREATE VIEW published.exide_hex_summary AS
+WITH boundary AS (
+    SELECT ST_Union(geometry) AS geom FROM staging.dtsc_pia_boundary
+)
 SELECT
-    row_number() OVER (ORDER BY i, j)::int AS hex_id,
-    i,
-    j,
-    n_parcels,
-    round(n_no_access::numeric / n_parcels, 2) AS share_no_access,
-    round(n_cleaned::numeric / n_parcels, 2)   AS share_cleaned,
-    CASE WHEN n_sampled >= 10 THEN n_sampled END AS n_sampled,
-    CASE WHEN n_sampled >= 10
-         THEN round(median_lead_ppm::numeric) END AS median_lead_ppm,
-    CASE WHEN n_sampled >= 10
-         THEN round(share_over_80::numeric, 2) END AS share_over_80,
-    CASE WHEN n_sampled >= 10
-         THEN round(share_over_400::numeric, 2) END AS share_over_400,
-    geom
-FROM analytics.exide_hex
-WHERE n_parcels >= 10;
+    row_number() OVER (ORDER BY h.i, h.j)::int AS hex_id,
+    h.i,
+    h.j,
+    CASE WHEN h.n_sampled >= 10 THEN 'reported'
+         ELSE 'insufficient_samples' END AS data_status,
+    h.n_parcels,
+    round(h.n_no_access::numeric / h.n_parcels, 2) AS share_no_access,
+    round(h.n_cleaned::numeric / h.n_parcels, 2)   AS share_cleaned,
+    CASE WHEN h.n_sampled >= 10 THEN h.n_sampled END AS n_sampled,
+    CASE WHEN h.n_sampled >= 10
+         THEN round(h.median_lead_ppm::numeric) END AS median_lead_ppm,
+    CASE WHEN h.n_sampled >= 10
+         THEN round(h.share_over_80::numeric, 2) END AS share_over_80,
+    CASE WHEN h.n_sampled >= 10
+         THEN round(h.share_over_400::numeric, 2) END AS share_over_400,
+    ST_Multi(ST_CollectionExtract(ST_Intersection(h.geom, b.geom), 3)) AS geom
+FROM analytics.exide_hex h
+CROSS JOIN boundary b
+WHERE h.n_parcels >= 10;
 
 -- The boundary and facility are public information.
 DROP VIEW IF EXISTS published.pia_boundary;
