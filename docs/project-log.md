@@ -122,3 +122,9 @@
 - Loaded parcels with data minimization, stable status codes, and row-level lineage; aggregated into 200 m hexagons with small-cell suppression (k=10).
 - Diagnostic map (internal, not committed): highest median lead along the I-5/I-10 corridor in Boyle Heights, north of the plant. Plant proximity, freeway proximity, and housing age are confounded here; to test in analysis.
 - Map v1 needs: legend, title, source and data date, attribution, method note, explicit "insufficient samples" style (`data_status` column), sample counts, caveat (screening values, not exposure), and an explanation of hexagons outside the PIA boundary before any clipping.
+
+### 2026-10-19: Session 7: Map v1 data fixes
+
+- Checked parcels against the PIA boundary: all 10,642 lie inside, so clipping hexagons to the boundary hides no data.
+- Published view now clips hexagons to the boundary and adds `data_status` (`reported`: 128; `insufficient_samples`: 2).
+- QGIS: gray (desaturated) basemap, hatched style for insufficient samples. Remaining for v1: print layout (legend, title, source and date, attribution, method note, caveat).
