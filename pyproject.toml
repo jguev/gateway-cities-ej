@@ -27,4 +27,4 @@ dev = [
 select = ["E", "F", "I"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["download"]
+known-first-party = ["download", "arcgis_rest"]

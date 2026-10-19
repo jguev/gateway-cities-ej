@@ -110,3 +110,9 @@
 - Investigated Huntington Park High School (PSCH-05): sampled, judged no cleanup needed; athletic fields not sampled. Removal Action Workplan (2017) link is dead.
 - Added a research question on sensitive-site decisions across the PIA.
 - **Reflection:** DTSC compared Huntington Park High School's results (100–110 ppm) to its 80 ppm residential screening level, which models children aged 0–7 exposed at home 350 days a year. Adjusted to a five-day school week, the equivalent level rises to 110 ppm, the top of the school's results, and DTSC added that older students are less susceptible to lead and contact school soil less often. The "no cleanup" decision therefore rests on exposure assumptions and on where samples were taken; the athletic fields, where soil contact is likely highest, were not sampled.
+
+### 2026-10-19: Session 6: DTSC layers via ArcGIS REST
+
+- Traced DTSC's cleanup map to its feature services (app → web map → layers).
+- Built `pipeline/arcgis_rest.py`: paged extraction with stable ordering, retries, count and duplicate checks, deterministic output.
+- Acquired parcels (10,642, private), PIA boundary, and facility. Resolved the sampling-protocol question (95% UCL of 10–15 samples).
