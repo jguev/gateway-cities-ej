@@ -42,6 +42,7 @@
 - **2026-10-15:** The database is organized in layers: `raw` (as loaded), `staging` (cleaned), `analytics` (joined and derived), and `public` (aggregated, small-cell-suppressed views only). A dedicated read-only role can access only `public`, so privacy is enforced by the database, not by convention.
 - **2026-10-15:** ArcGIS feature services are extracted with explicit paging, retries, and record-count checks against the service's reported total.
 - **2026-10-15:** No heavyweight orchestration tool (Airflow, Dagster, etc.). The pipeline runs as a simple ordered command; revisit only if the number of sources or schedules grows substantially.
+- **2026-10-19:** Aggregated layer named `published` (PostgreSQL already has a `public` schema). Hexagons use a 200 m side; groups under 10 parcels are suppressed.
 
 ## Open Decisions
 
@@ -116,3 +117,8 @@
 - Traced DTSC's cleanup map to its feature services (app → web map → layers).
 - Built `pipeline/arcgis_rest.py`: paged extraction with stable ordering, retries, count and duplicate checks, deterministic output.
 - Acquired parcels (10,642, private), PIA boundary, and facility. Resolved the sampling-protocol question (95% UCL of 10–15 samples).
+- Built the layered database (`raw`, `staging`, `analytics`, `published`) with `map_reader` restricted to `published`. Verified the wall from psql and from QGIS.
+- Found and fixed a QGIS connection that silently defaulted to the owner role (no stored user name).
+- Loaded parcels with data minimization, stable status codes, and row-level lineage; aggregated into 200 m hexagons with small-cell suppression (k=10).
+- Diagnostic map (internal, not committed): highest median lead along the I-5/I-10 corridor in Boyle Heights, north of the plant. Plant proximity, freeway proximity, and housing age are confounded here; to test in analysis.
+- Map v1 needs: legend, title, source and data date, attribution, method note, explicit "insufficient samples" style (`data_status` column), sample counts, caveat (screening values, not exposure), and an explanation of hexagons outside the PIA boundary before any clipping.
