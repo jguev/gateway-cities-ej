@@ -56,7 +56,7 @@ vintage is acquired.
 - **NAD83 vs WGS 84** differ by about 1–2 m in California. Always
   transform explicitly; never relabel one as the other.
 
-  ---
+---
 
 ## CalEnviroScreen 5.0 (OEHHA)
 

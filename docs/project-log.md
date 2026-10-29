@@ -76,7 +76,7 @@
 - Loaded the Huntington Park boundary (GEOID 0636056) from TIGER into PostGIS, reprojected to EPSG:3310.
 - Verified: PostGIS area matches Census at 7.798 km².
 
-### 2026-10-07: Session 2: Acquisition Pipeline and Data Inventory (#2,3)
+### 2026-10-07: Session 2: Acquisition Pipeline and Data Inventory (#2, #3)
 
 - Built `pipeline/download.py`: streams downloads into dated raw folders, writes to a `.part` file then renames, rejects HTML error pages, and records provenance in a JSONL manifest.
 - Re-acquired TIGER Places through the pipeline; confirmed the checksum with `shasum` and that it matched the hand-downloaded copy before deleting it.
@@ -95,7 +95,7 @@
 - Statewide data-quality check: 73 tracts have no overall score. The largest (13,681 people, tract 06037265301) is the UCLA dormitory area, outside the study area. It explained the pattern: students in dorms live in "group quarters," which are excluded from poverty statistics. None of the tracts touching Huntington Park are unscored, but group-quarters tracts elsewhere in the study area could be.
 - **Reflection:** A spatial join matches rows when shapes intersect, and "intersects" includes tracts that only share a border with Huntington Park. Those border tracts are more neighbors than actual parts of the city, so I measured each tract's overlap area to keep only the ones truly inside.
 
-### 2026-10-08: Session 4: Reproducibility Cleanup
+### 2026-10-08: Session 4: Reproducibility Cleanup (#5)
 
 - Added a Conventions section (dates, CRS, Census IDs, PR references).
 - Inventory: added NULL-count table, overlap method/rule/result, file checksums, open questions.
@@ -103,7 +103,7 @@
 - Committed exploration scripts in `notebooks/`; rerunning them reproduced every documented number.
 - **Reflection:** My exploration of the data used to live only in my terminal history. Findings I can rerun let me check whether they still hold when the data changes.
 
-### 2026-10-15: Session 5: Exide Context, Study Areas, and Background
+### 2026-10-15: Session 5: Exide Context, Study Areas, and Background (#6, #7)
 
 - Decided on two study areas (Exide core; Gateway Cities region); resolved the open study-area decision and recorded two follow-up questions.
 - Fact-checked the Exide history against primary sources; four earlier claims corrected (PIA shape, sampling vs. cleanup counts, 2018 date on 8,500 parcels, unverified sampling protocol).
@@ -112,7 +112,7 @@
 - Added a research question on sensitive-site decisions across the PIA.
 - **Reflection:** DTSC compared Huntington Park High School's results (100–110 ppm) to its 80 ppm residential screening level, which models children aged 0–7 exposed at home 350 days a year. Adjusted to a five-day school week, the equivalent level rises to 110 ppm, the top of the school's results, and DTSC added that older students are less susceptible to lead and contact school soil less often. The "no cleanup" decision therefore rests on exposure assumptions and on where samples were taken; the athletic fields, where soil contact is likely highest, were not sampled.
 
-### 2026-10-19: Session 6: DTSC layers via ArcGIS REST
+### 2026-10-19: Session 6: DTSC layers via ArcGIS REST (#8, #9)
 
 - Traced DTSC's cleanup map to its feature services (app → web map → layers).
 - Built `pipeline/arcgis_rest.py`: paged extraction with stable ordering, retries, count and duplicate checks, deterministic output.
@@ -123,8 +123,14 @@
 - Diagnostic map (internal, not committed): highest median lead along the I-5/I-10 corridor in Boyle Heights, north of the plant. Plant proximity, freeway proximity, and housing age are confounded here; to test in analysis.
 - Map v1 needs: legend, title, source and data date, attribution, method note, explicit "insufficient samples" style (`data_status` column), sample counts, caveat (screening values, not exposure), and an explanation of hexagons outside the PIA boundary before any clipping.
 
-### 2026-10-19: Session 7: Map v1 data fixes
+### 2026-10-19: Session 7: Map v1 data fixes (#10)
 
 - Checked parcels against the PIA boundary: all 10,642 lie inside, so clipping hexagons to the boundary hides no data.
 - Published view now clips hexagons to the boundary and adds `data_status` (`reported`: 128; `insufficient_samples`: 2).
 - QGIS: gray (desaturated) basemap, hatched style for insufficient samples. Remaining for v1: print layout (legend, title, source and date, attribution, method note, caveat).
+
+### 2026-10-28: Session 8: Map v1 (#11)
+
+- Built the print layout: title and subtitle with data date, two-section legend, notes, credits, scale bar, north arrow.
+- Fixed class breaks to match QGIS's first-match rule (0–79, 80–299, 300–399, 400–999, 1,000+); facility recolored to avoid confusion with the top class.
+- Exported `maps/exide_soil_lead_v1.pdf` and `.png` (aggregated, suppressed; publishable per privacy plan).
